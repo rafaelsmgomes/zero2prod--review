@@ -1,5 +1,7 @@
 #! spec.yaml
 name: zero2prod
+# This works by pulling the Dockerfile that is currently on github
+# Make sure your GitHub is up to date with your local file then
 
 region: nyc
 services:
@@ -16,3 +18,10 @@ services:
     instance_size_slug: basic-xxs
     routes:
       - path: /
+
+databases:
+  - engine: PG
+    name: newsletter
+    num_nodes: 1
+    size: db-s-dev-database
+    version: "12"
