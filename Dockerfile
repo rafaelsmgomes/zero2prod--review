@@ -1,10 +1,18 @@
-From rust:1.72-slim-bullseye AS builder
-
+from lukemathwalker/cargo-chef:latest-rust-1.72 as chef
 workdir /app 
 run apt update && apt install lld clang -y
+
+from chef as planner
+copy . .
+run cargo chef prepare --recipe-path recipe.json
+
+from chef as builder
+copy --from=planner /app/recipe.json recipe.json
+run cargo chef cook --release --recipe-path recipe.json
 copy . .
 env SQLX_OFFLINE true
-run cargo build --release
+run cargo build --release --bin zero2prod-review
+
 
 FROM debian:bullseye-slim AS runtime
 workdir /app 
