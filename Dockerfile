@@ -1,6 +1,7 @@
-from lukemathwalker/cargo-chef:latest-rust-1.72 as chef
+from lukemathwalker/cargo-chef:latest-rust-1.72-slim-bullseye as chef
 workdir /app 
 run apt update && apt install lld clang -y
+env CARGO_CHEF_GLIBC=2.29
 
 from chef as planner
 copy . .
