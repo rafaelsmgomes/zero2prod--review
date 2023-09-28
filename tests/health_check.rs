@@ -1,5 +1,4 @@
 use once_cell::sync::Lazy;
-use secrecy::ExposeSecret;
 use sqlx::{self, Executor, PgPool};
 use sqlx::{Connection, PgConnection};
 use std::net::TcpListener;
