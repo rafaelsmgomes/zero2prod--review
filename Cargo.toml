@@ -15,7 +15,7 @@ name = "zero2prod-review"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 actix-web = "4"
-tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "rt"] }
 serde = { version = "1", features = ["derive"]}
 config = "0.11"
 uuid = { version = "0.8.1", features = ["v4"] }
@@ -50,6 +50,5 @@ features = [
 ]
 
 [dev-dependencies]
-tokio = { version = "1", features = ["rt", "macros"]}
 wiremock = "0.5"
 
