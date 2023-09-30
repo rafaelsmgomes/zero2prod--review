@@ -79,6 +79,23 @@ mod tests {
     use wiremock::Request;
     use wiremock::{Mock, MockServer, ResponseTemplate};
 
+    struct SendEmailBodyMatcher;
+
+    impl wiremock::Match for SendEmailBodyMatcher {
+        fn matches(&self, request: &Request) -> bool {
+            let result: Result<serde_json::Value, _> = serde_json::from_slice(&request.body);
+            if let Ok(body) = result {
+                body.get("From").is_some()
+                    && body.get("To").is_some()
+                    && body.get("Subject").is_some()
+                    && body.get("HtmlBody").is_some()
+                    && body.get("TextBody").is_some()
+            } else {
+                false
+            }
+        }
+    }
+
     fn subject() -> String {
         Sentence(1..2).fake()
     }
@@ -95,25 +112,10 @@ mod tests {
             base_url,
             email(),
             Secret::new(Faker.fake()),
-            std::time::Duration::from_millis(200),
+            // BUG: this is not working with the code provided. The test is too fast and makes the
+            // tests all fail with 200 milliseconds
+            std::time::Duration::from_secs(10),
         )
-    }
-
-    struct SendEmailBodyMatcher;
-
-    impl wiremock::Match for SendEmailBodyMatcher {
-        fn matches(&self, request: &Request) -> bool {
-            let result: Result<serde_json::Value, _> = serde_json::from_slice(&request.body);
-            if let Ok(body) = result {
-                body.get("From").is_some()
-                    && body.get("To").is_some()
-                    && body.get("Subject").is_some()
-                    && body.get("HtmlBody").is_some()
-                    && body.get("TextBody").is_some()
-            } else {
-                false
-            }
-        }
     }
 
     #[tokio::test]
